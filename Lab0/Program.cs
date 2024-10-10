@@ -1,11 +1,17 @@
-﻿Product product1 = new Product("Laptop", 1000m);
-Product product2 = new Product("Mouse", 50m);
+﻿// Create an order
+using Lab0.Interfaces;
+using Lab0.Models;
+using Lab0.Utils;
 
-// Apply 10% discount using OCP.
-IDiscountStrategy discountStrategy = new PercentageDiscountStrategy(10m);
+Order order = new Order
+{
+    OrderId = "12345",
+    CustomerEmail = "customer@example.com"
+};
 
-ShoppingCart cart = new ShoppingCart(discountStrategy);
-cart.AddProduct(product1);
-cart.AddProduct(product2);
+// Using EmailNotificationService to process the order
+INotificationService emailService = new EmailNotificationService();
+OrderProcessor processor = new OrderProcessor(emailService);
 
-Console.WriteLine($"Total price with discount: {cart.GetTotal()}");
+// Process the order
+processor.ProcessOrder(order);
