@@ -37,9 +37,10 @@ ShoppingCart cart = ShoppingCart.Instance;
 cart.Products.Add(basicLaptop);
 cart.Products.Add(gamingLaptop);
 cart.Products.Add(customPC);
+List<Product> products = cart.GetProducts();
 
 // Display products in the shopping cart
-foreach (Product product in cart.Products)
+foreach (Product product in products)
 {
     product.DisplayProductInfo();
 }
