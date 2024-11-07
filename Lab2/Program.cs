@@ -1,6 +1,6 @@
-﻿using Lab1.Payment;
-using Lab1.Product;
-using Lab1.ShoppingCart;
+﻿using Lab2.Payment;
+using Lab2.Product;
+using Lab2.ShoppingCart;
 
 //BUILDING PRODUCTS USING THE BUILDER PATTERN
 // Create the builder
@@ -46,8 +46,14 @@ foreach (Product product in cart.Products)
 }
 Console.WriteLine();
 
+// Facade: Process payments using different payment methods
+PaymentFacade paymentFacade = new PaymentFacade();
+paymentFacade.ProcessPayment("CreditCard", 1000.00M);
+paymentFacade.ProcessPayment("ApplePay", 1500.00M);
+paymentFacade.ProcessPayment("GooglePay", 2000.00M);
+paymentFacade.ProcessPayment("PayPal", 2500.00M);
 
 
 // Factory Method: Creating a payment method
-IPayment payment = PaymentFactory.CreatePayment("PayPal");
-payment.ProcessPayment();
+// IPayment payment = PaymentFactory.CreatePayment("PayPal");
+// payment.ProcessPayment();
