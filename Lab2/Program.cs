@@ -38,7 +38,32 @@ Console.WriteLine("Product Info After 5% Tax:");
 taxedProduct.DisplayProductInfo();
 Console.WriteLine();
 
+//Composite Pattern
+// Create some products
+// Create a base product
+builder.SetProductName("T-Shirt");
+builder.SetPrice(190.99m);
+builder.SetCategory("Clothing");
+builder.SetDescription("100% cotton t-shirt");
+builder.SetSKU("TS-001");
+builder.SetStock(50);
+Product shirt = ((ProductBuilder)builder).Build();
 
+builder.SetProductName("Pants");
+builder.SetPrice(44.99m);
+builder.SetCategory("Clothing");
+builder.SetDescription("100% cotton t-shirt");
+builder.SetSKU("P-001");
+builder.SetStock(23);
+Product pants = ((ProductBuilder)builder).Build();
+
+// Create a product category
+IProduct clothingCategory = new ProductCategory("Clothing");
+clothingCategory.AddComponent(shirt);
+clothingCategory.AddComponent(pants);
+
+// Display the product category information
+clothingCategory.DisplayProductInfo();
 
 
 
