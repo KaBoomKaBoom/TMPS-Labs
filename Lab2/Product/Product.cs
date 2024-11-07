@@ -1,6 +1,6 @@
 namespace Lab2.Product
 {
-    public class Product
+    public class Product : IProduct
     {
         public string Name { get; private set; }
         public decimal Price { get; private set; }
