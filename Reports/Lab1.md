@@ -22,13 +22,24 @@ The domain selected for this report is an **eCommerce System**. The system handl
 In this project, I implemented several **Creational Design Patterns** to optimize object creation and improve system flexibility:
 
 1. **Builder Pattern**  
-   The Builder Pattern allows the step-by-step construction of complex objects. This pattern is particularly useful when creating objects with many optional fields or configurations. It separates the construction process from the object's representation, offering flexibility in how the final product is created.
+    Builder is a creational design pattern that lets you construct complex objects step by step. The pattern
+    allows you to produce different types and representations of an object using the same construction code.
+
+    ![Alt text](/Images/BuilderDiagram.png)
+
 
 2. **Singleton Pattern**  
-   The Singleton Pattern ensures that a class has only one instance while providing global access to that instance. It is often used for managing shared resources like a shopping cart or database connection, where having multiple instances could lead to inconsistent states.
+    Singleton is a creational design pattern that lets you ensure that a class has only one instance, while
+    providing a global access point to this instance.
+
+    ![Alt text](/Images/SingletonDiagram.png)
+
 
 3. **Factory Method Pattern**  
-   The Factory Method Pattern defines an interface for creating objects but allows subclasses to alter the type of objects that will be created. It promotes loose coupling by delegating the responsibility of object instantiation to subclasses, ensuring that the code is open for extension but closed for modification.
+    Factory Method is a creational design pattern that provides an interface for creating objects in a
+    superclass, but allows subclasses to alter the type of objects that will be created.
+
+    ![Alt text](/Images/FactoryMthodDiagram.png)
 
 ---
 
@@ -78,7 +89,9 @@ public class ProductBuilder : IProductBuilder
 }
 ```
 
-This allows us to construct products in a flexible and controlled manner.
+In the interfac `IProductBuilder` are defined abstract methods to set different propreties of a product. Each method takes its own parameter. Some product's propreties that may be set are `Name`, `Price`, `Category` etc.
+
+Next, it is defined a class `ProductBuilder`, which is a concrete implementation of the interface above. First, it has privat fields of product propreties. After that follow the concrete implementationn of interface's methods for setting the propreties defined above. Also, a final method is `Build`, which returns an object of `Product` with set characteristics.
 
 **Usage Example:**
 
@@ -92,8 +105,49 @@ builder.SetSKU("LAPTOP-001");
 builder.SetStock(10);
 Product laptop = builder.Build();
 ```
+In this usage example, first we create an instance of `ProductBuilder`. After that, we set some custom characteeristics to our product. Final step is building an object of type `Product`, in this case a laptop.
 
----
+Also, in this laboratory work is implemented a `Director` class, where are defined some default products. Below is the implementation of this.
+
+```csharp
+public class ProductDirector
+    {
+        private readonly IProductBuilder _builder;
+
+        public ProductDirector(IProductBuilder builder)
+        {
+            _builder = builder;
+        }
+
+        public void BuildBasicLaptop()
+        {
+            _builder.SetProductName("Basic Laptop");
+            _builder.SetPrice(799.99M);
+            _builder.SetCategory("Electronics");
+            _builder.SetDescription("A basic laptop for everyday use.");
+            _builder.SetSKU("LAPTOP-BASIC-123");
+            _builder.SetStock(50);
+        }
+    }
+```
+
+In this code, we define a private field of type `IProductBuilder`. 
+
+Next we have a method `BuildBasicLaptop`. Here, as the Director class is responsable for some default products, we set to `BasicLaptop` some default values. In main `Program`, the usage of `Director` class is shown below.
+
+**Usage Example:**
+
+```csharp
+ProductDirector director = new ProductDirector(builder);
+director.BuildGamingLaptop();
+Product gamingLaptop = ((ProductBuilder)builder).Build();
+```
+
+In this code, first we create an instance of `ProductDirector` class.
+
+Second we build a Basic Laptop using the `Director` class. 
+
+In next line, we create a field of type `Product` and assign to it the value of the builded product, using `ProductBuilder` class, specifically method `Build`.
 
 #### **2. Singleton Pattern**
 
@@ -126,20 +180,24 @@ public class ShoppingCart : IShoppingCart
             return _instance;
         }
     }
-
-    public void AddProduct(IProduct product)
-    {
-        _products.Add(product);
-    }
-
-    public List<IProduct> GetProducts()
-    {
-        return _products;
-    }
 }
 ```
 
-The singleton ensures that a single, shared instance of `ShoppingCart` is used throughout the system.
+First, we define an interface `IShoppingCart`. It has 2 abstract methods: 
+
+`AddProduct` - adding a product to the shopping cart
+
+`GetProducts` - getting all products from the cart as a list 
+
+Next, it is defined a class `ShoppingCart` which implments the above interface. It has 2 private fields: 
+
+`_instance` - `ShoppingCart` instance which will be used to return just one instance of this class
+
+`_products` - list of products 
+
+Next, we define an `Instance` property. In the get accessor of `Instance`, it checks if `_instance` is null. If it is, it creates a new `ShoppingCart` instance; otherwise, it returns the already-created instance.
+
+The constructor is private (`private ShoppingCart()`), meaning other classes cannot instantiate ShoppingCart directly.
 
 **Usage Example:**
 
@@ -148,8 +206,10 @@ IShoppingCart cart = ShoppingCart.Instance;
 cart.AddProduct(new Product("Laptop", 1000));
 List<IProduct> products = cart.GetProducts();
 ```
+First line retrieves the singleton instance of `ShoppingCart` through its `Instance` property and assigns it to the `cart` variable.
 
----
+Next to the `cart` is added a new product. After this, the products from cart are extractd into `products`, a list of all products.
+
 
 #### **3. Factory Method Pattern**
 
@@ -176,14 +236,6 @@ public class CreditCardPayment : Payment
     }
 }
 
-public class PayPalPayment : Payment
-{
-    public override void ProcessPayment()
-    {
-        Console.WriteLine("Processing PayPal payment...");
-    }
-}
-
 public class PaymentFactory
 {
     public static IPayment CreatePayment(string type)
@@ -201,7 +253,15 @@ public class PaymentFactory
 }
 ```
 
-The factory allows us to create different payment methods based on user input, making the code more modular and maintainable.
+First, we define an interface `IPayment`, which has an abstract method of `ProcessPayment`.
+
+Next, we define an abstract class `Payment`, having also an abstract method `ProcessPayment`.
+
+After this, we define a class `CreditCardPayment` which implements the astract class `Payment`. It has a method `ProcessPayment` which ovrrides the abstract method. This method just prints the payment method used.
+
+Similar to `CreditCardPayment`, in this work is defined `PayPalPayment`, with the same implementation.
+
+Next, we have the class `PaymentFactory`. It has a method `CreatePayment`, which returns either `CreditCardPayment` or `PayPalPayment`. This method takes as argument the `type` of payment. Inside the method we have a `switch case`, which compares the argument with existing payment method and returns a required instance.
 
 **Usage Example:**
 
@@ -210,14 +270,11 @@ IPayment payment = PaymentFactory.CreatePayment("PayPal");
 payment.ProcessPayment();
 ```
 
----
+In this case, `payment` is an object of type `IPayment`. To it is assigned an instance of `PayPalPayment` by using `CreatePayment` method of the `PaymentFactory` class.
 
-### **Summary of Implementation**
-
-By using the **Builder Pattern**, I were able to construct products flexibly with various configurations. The **Singleton Pattern** ensured the proper management of shared resources like the shopping cart, while the **Factory Method Pattern** facilitated the creation of different payment methods, adhering to the **open/closed principle**. These patterns collectively enhanced the system’s scalability, maintainability, and flexibility.
-
+In next line, we use `ProcessPayment` method to display "Processing PayPal payment..." (in our case, this being the implementation of `ProcessPayment` method in `PayPalPayment` class).
 
 ### **Conclusion**
 
-In this project, I successfully implemented several **Creational Design Patterns** in an eCommerce domain, focusing on efficient and flexible object creation. The **Builder Pattern** allowed us to create complex product objects step by step, while the **Singleton Pattern** ensured the proper management of shared instances like the shopping cart. Additionally, the **Factory Method Pattern** provided a modular approach for creating different payment methods. These patterns not only improved the flexibility and scalability of the system but also adhered to SOLID principles, making the codebase easier to maintain and extend in the future. By leveraging these patterns, I achieved a more robust and adaptable solution for our eCommerce platform. 
+In this project, I successfully implemented several **Creational Design Patterns** in an eCommerce domain, focusing on efficient and flexible object creation. The **Builder Pattern** allowed us to create complex product objects step by step, while the **Singleton Pattern** ensured the proper management of shared instances like the shopping cart. Additionally, the **Factory Method Pattern** provided a modular approach for creating different payment methods. These patterns not only improved the flexibility and scalability of the system but also adhered to SOLID principles, making the codebase easier to maintain and extend in the future. 
 
