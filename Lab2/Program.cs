@@ -40,7 +40,6 @@ Console.WriteLine();
 
 //Composite Pattern
 // Create some products
-// Create a base product
 builder.SetProductName("T-Shirt");
 builder.SetPrice(190.99m);
 builder.SetCategory("Clothing");
@@ -58,11 +57,12 @@ builder.SetStock(23);
 Product pants = ((ProductBuilder)builder).Build();
 
 // Create a product category
-IProduct clothingCategory = new ProductCategory("Clothing");
+ProductCategory clothingCategory = new ProductCategory("Clothing");
 clothingCategory.AddComponent(shirt);
 clothingCategory.AddComponent(pants);
 
 // Display the product category information
+Console.WriteLine("Category using composite pattern:");
 clothingCategory.DisplayProductInfo();
 
 
