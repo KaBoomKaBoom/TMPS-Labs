@@ -1,69 +1,96 @@
 ﻿using Lab3.Payment;
 using Lab3.Product;
 using Lab3.ShoppingCart;
+using Lab3.OrderSystem;
+using Lab3.OrderSystem.Handlers;
+
+//CHAIN OF RESPONSIBILITY PATTERN
+var shoppingCart = ShoppingCart.Instance;
+shoppingCart.Products.Add(new Product("Laptop", 1000m, "Electronics", "High-end laptop", "SKU123", 10));
+
+var orderContext = new OrderContext(
+    shoppingCart,
+    "123 Main Street, Springfield",
+    "Test payment details"
+);
+
+var orderService = new OrderService();
+orderService.PlaceOrder(orderContext);
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Facade: Process payments using different payment methods
-PaymentFacade paymentFacade = new PaymentFacade();
-paymentFacade.ProcessPayment("CreditCard", 1000.00M);
-paymentFacade.ProcessPayment("ApplePay", 1500.00M);
-paymentFacade.ProcessPayment("GooglePay", 2000.00M);
-paymentFacade.ProcessPayment("PayPal", 2500.00M);
-Console.WriteLine();
+// PaymentFacade paymentFacade = new PaymentFacade();
+// paymentFacade.ProcessPayment("CreditCard", 1000.00M);
+// paymentFacade.ProcessPayment("ApplePay", 1500.00M);
+// paymentFacade.ProcessPayment("GooglePay", 2000.00M);
+// paymentFacade.ProcessPayment("PayPal", 2500.00M);
+// Console.WriteLine();
 
-//Decorator Pattern 
-IProductBuilder builder = new ProductBuilder();
+// //Decorator Pattern 
+// IProductBuilder builder = new ProductBuilder();
 
-// Create a base product
-builder.SetProductName("T-Shirt");
-builder.SetPrice(190.99m);
-builder.SetCategory("Clothing");
-builder.SetDescription("100% cotton t-shirt");
-builder.SetSKU("TS-001");
-builder.SetStock(50);
-Product product = ((ProductBuilder)builder).Build();
+// // Create a base product
+// builder.SetProductName("T-Shirt");
+// builder.SetPrice(190.99m);
+// builder.SetCategory("Clothing");
+// builder.SetDescription("100% cotton t-shirt");
+// builder.SetSKU("TS-001");
+// builder.SetStock(50);
+// Product product = ((ProductBuilder)builder).Build();
 
-Console.WriteLine("Initial Product Info:");
-product.DisplayProductInfo();
-Console.WriteLine();
+// Console.WriteLine("Initial Product Info:");
+// product.DisplayProductInfo();
+// Console.WriteLine();
 
-// Decorator: Apply a 10% discount to the product
-IProduct discountedProduct = new DiscountDecorator(product, 0.10M);
-Console.WriteLine("Product Info After 10% Discount:");
-discountedProduct.DisplayProductInfo();
-Console.WriteLine();
+// // Decorator: Apply a 10% discount to the product
+// IProduct discountedProduct = new DiscountDecorator(product, 0.10M);
+// Console.WriteLine("Product Info After 10% Discount:");
+// discountedProduct.DisplayProductInfo();
+// Console.WriteLine();
 
-// Decorator: Apply a 5% tax to the product
-IProduct taxedProduct = new TaxDecorator(product, 0.05M);
-Console.WriteLine("Product Info After 5% Tax:");
-taxedProduct.DisplayProductInfo();
-Console.WriteLine();
+// // Decorator: Apply a 5% tax to the product
+// IProduct taxedProduct = new TaxDecorator(product, 0.05M);
+// Console.WriteLine("Product Info After 5% Tax:");
+// taxedProduct.DisplayProductInfo();
+// Console.WriteLine();
 
-//Composite Pattern
-// Create some products
-builder.SetProductName("T-Shirt");
-builder.SetPrice(190.99m);
-builder.SetCategory("Clothing");
-builder.SetDescription("100% cotton t-shirt");
-builder.SetSKU("TS-001");
-builder.SetStock(50);
-Product shirt = ((ProductBuilder)builder).Build();
+// //Composite Pattern
+// // Create some products
+// builder.SetProductName("T-Shirt");
+// builder.SetPrice(190.99m);
+// builder.SetCategory("Clothing");
+// builder.SetDescription("100% cotton t-shirt");
+// builder.SetSKU("TS-001");
+// builder.SetStock(50);
+// Product shirt = ((ProductBuilder)builder).Build();
 
-builder.SetProductName("Pants");
-builder.SetPrice(44.99m);
-builder.SetCategory("Clothing");
-builder.SetDescription("100% cotton t-shirt");
-builder.SetSKU("P-001");
-builder.SetStock(23);
-Product pants = ((ProductBuilder)builder).Build();
+// builder.SetProductName("Pants");
+// builder.SetPrice(44.99m);
+// builder.SetCategory("Clothing");
+// builder.SetDescription("100% cotton t-shirt");
+// builder.SetSKU("P-001");
+// builder.SetStock(23);
+// Product pants = ((ProductBuilder)builder).Build();
 
-// Create a product category
-ProductCategory clothingCategory = new ProductCategory("Clothing");
-clothingCategory.AddComponent(shirt);
-clothingCategory.AddComponent(pants);
+// // Create a product category
+// ProductCategory clothingCategory = new ProductCategory("Clothing");
+// clothingCategory.AddComponent(shirt);
+// clothingCategory.AddComponent(pants);
 
-// Display the product category information
-Console.WriteLine("Category using composite pattern:");
-clothingCategory.DisplayProductInfo();
+// // Display the product category information
+// Console.WriteLine("Category using composite pattern:");
+// clothingCategory.DisplayProductInfo();
 
 
 
