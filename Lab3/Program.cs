@@ -3,6 +3,7 @@ using Lab3.Product;
 using Lab3.ShoppingCart;
 using Lab3.OrderSystem;
 using Lab3.OrderSystem.Handlers;
+using Lab3.DiscountSystem;
 
 //CHAIN OF RESPONSIBILITY PATTERN
 var shoppingCart = ShoppingCart.Instance;
@@ -16,6 +17,31 @@ var orderContext = new OrderContext(
 
 var orderService = new OrderService();
 orderService.PlaceOrder(orderContext);
+
+
+//Startegy Pattern
+shoppingCart.Products.Add(new Product("Laptop", 1000, "Electronics", "A fast laptop", "SKU001", 10));
+shoppingCart.Products.Add(new Product("Headphones", 200, "Accessories", "Noise-cancelling", "SKU002", 5));
+
+Console.WriteLine($"Total before discount: {shoppingCart.CalculateTotal()}");
+
+// Seasonal discount
+shoppingCart.SetDiscountStrategy(new SeasonalDiscount(15)); // 15% seasonal discount
+Console.WriteLine($"Total after seasonal discount: {shoppingCart.CalculateTotal()}");
+
+// Member discount
+shoppingCart.SetDiscountStrategy(new MemberDiscount(50)); // $50 discount for members
+Console.WriteLine($"Total after member discount: {shoppingCart.CalculateTotal()}");
+
+// Coupon code discount
+// var validCoupons = new Dictionary<string, decimal>
+//         {
+//             { "SAVE10", 100 },
+//             { "FREESHIP", 200 },
+//             { "BLACKFRIDAY", 500 }
+//         };
+// shoppingCart.SetDiscountStrategy(new CouponCodeDiscount(validCoupons));
+// Console.WriteLine($"Total after coupon code discount: {shoppingCart.CalculateTotal()}");
 
 
 
