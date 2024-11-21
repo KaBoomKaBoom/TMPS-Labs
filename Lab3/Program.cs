@@ -4,6 +4,7 @@ using Lab3.ShoppingCart;
 using Lab3.OrderSystem;
 using Lab3.OrderSystem.Handlers;
 using Lab3.DiscountSystem;
+using Lab3.ObserverSystem;
 
 //CHAIN OF RESPONSIBILITY PATTERN
 var shoppingCart = ShoppingCart.Instance;
@@ -17,7 +18,7 @@ var orderContext = new OrderContext(
 
 var orderService = new OrderService();
 orderService.PlaceOrder(orderContext);
-
+Console.WriteLine();
 
 //Startegy Pattern
 shoppingCart.Products.Add(new Product("Laptop", 1000, "Electronics", "A fast laptop", "SKU001", 10));
@@ -42,9 +43,34 @@ Console.WriteLine($"Total after member discount: {shoppingCart.CalculateTotal()}
 //         };
 // shoppingCart.SetDiscountStrategy(new CouponCodeDiscount(validCoupons));
 // Console.WriteLine($"Total after coupon code discount: {shoppingCart.CalculateTotal()}");
+Console.WriteLine();
 
+//OBSERVER PATTERN
+// Create an order
+var order = new Order("ORD123", "Pending");
 
+// Create observers
+var adminObserver = new AdminObserver();
+var customerObserver = new CustomerObserver("John Doe");
 
+// Attach observers to the order
+order.Attach(adminObserver);
+order.Attach(customerObserver);
+
+// Simulate order status updates
+Console.WriteLine("Updating order status to 'Processing'...");
+order.Status = "Processing";
+Console.WriteLine();
+
+Console.WriteLine("Updating order status to 'Shipped'...");
+order.Status = "Shipped";
+Console.WriteLine();
+
+// Detach an observer and update again
+order.Detach(adminObserver);
+
+Console.WriteLine("Updating order status to 'Delivered'...");
+order.Status = "Delivered";
 
 
 
